@@ -1,0 +1,22 @@
+# RStudio files
+.Rproj.user/
+
+# R workspace and history files
+.Rhistory
+.RData
+.Ruserdata
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Build artifacts and check results
+*.tar.gz
+*.Rcheck/
+
+# Additional temp or cache directories
+*_cache/
+
+inst/doc
+/doc/
+/Meta/

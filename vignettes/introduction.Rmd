@@ -1,0 +1,137 @@
+---
+title: "Introduction to ufcscrapeR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to ufcscrapeR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r logo, echo=FALSE, out.width="300px", fig.align="center"}
+knitr::include_graphics("../man/figures/ufcscrapeR-hex.png")
+```
+
+```{r setup}
+library(ufcscrapeR)
+# Optionally load tidyverse for data manipulation and visualization
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+})
+
+```
+
+# Introduction
+
+The ufcscrapeR package provides a straightforward way to scrape UFC and Pride fight data directly from UFCStats.com. With ufcscrapeR, you can quickly access round-by-round statistics, total fight metrics, control times, strikes by location, takedown data, submission attempts, and more. These rich datasets can fuel predictive modeling, data visualization, and advanced MMA analytics.
+
+This vignette introduces the main functionalities of ufcscrapeR and demonstrates how to use the package to pull data for a given fighter, export results to a CSV, and perform a brief exploratory analysis.
+
+## Key Features at a Glance
+
+- **Scrape UFC and Pride Data:** Retrieve data for any fighter who has participated in UFC or Pride events.
+- **Granular Metrics:** Extract round-by-round and total fight-level statistics, including strikes (head, body, leg), takedowns, submission attempts, and control times.
+- **Easy Integration:** The output is structured as a data frame, making it easy to integrate with packages like `dplyr`, `ggplot2`, and `tidymodels`.
+
+## Getting Started
+
+Before you begin, ensure you have the package installed and loaded:
+
+```{r load-package}
+# If not installed from source:
+# install.packages("devtools")
+# devtools::install_local("path_to_ufcscrapeR")
+
+library(ufcscrapeR)
+```
+
+## Retrieving Data
+
+The main function you’ll use is get_ufc_data(). Simply supply a fighter’s name, and ufcscrapeR will fetch their fight history and statistics.
+
+```{r get-data, eval=FALSE}
+# This code is wrapped in eval=FALSE to prevent long runtime or network dependencies during CRAN checks.
+# Remove eval=FALSE to run locally.
+df <- get_ufc_data("Israel Adesanya")
+head(df)
+```
+
+What You’ll See:
+
+The returned data frame includes key fight-level details (opponent, event, result, method, etc.) and multiple columns detailing strikes, takedowns, and other stats both at the total fight level and on a round-by-round basis.
+
+## Data Structure and Columns
+
+The returned data frame may contain:
+
+- **Basic Info:** fighter_name, opponent_name, event_name, event_date, round, Time, method_main (e.g., KO/TKO, SUB, DEC), method_detail (e.g., Punches, Rear Naked Choke).
+- **Total Metrics:** Columns prefixed with TOT_ represent aggregated fight-level stats, such as TOT_fighter_SigStr, TOT_opponent_Td, TOT_fighter_SubAtt, and more.
+- **Round-by-Round Data:** Columns like Round1_fighter_SigStr, Round1_opponent_Ctrl detail stats specific to each round.
+
+## Exporting Data to CSV
+
+You can easily save the scraped data to a CSV file using export_ufc_data_csv():
+
+```{r export-example, eval=FALSE}
+export_ufc_data_csv(df, "Israel_Adesanya_Fight_Data.csv")
+```
+
+This allows you to store your data locally for archival, sharing, or offline analysis.
+
+## Example Analysis
+
+Once you have the data in a data frame, you can leverage the broader R ecosystem to analyze and visualize it. For example, suppose we want to look at how a fighter’s significant strikes evolve over their career.
+
+(Note: This code assumes df is loaded with data. You can remove eval=FALSE when you have a real dataset.)
+
+```{r analysis-plot, eval=FALSE}
+# Suppose df is already retrieved for "Israel Adesanya"
+# Filter for fights with valid round data and plot total significant strikes by event date
+df_clean <- df %>%
+  mutate(event_date = as.Date(event_date)) %>%
+  filter(!is.na(TOT_fighter_SigStr))
+
+ggplot(df_clean, aes(x = event_date, y = TOT_fighter_SigStr)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Trend in Fighter's Total Significant Strikes Over Time",
+    x = "Event Date",
+    y = "Total Significant Strikes"
+  ) +
+  theme_minimal()
+```
+
+- **Interpretation:** This plot would show how the fighter’s total significant strikes in a fight have changed over their UFC career, potentially indicating improvements or shifts in fighting style.
+
+## Other Use Cases
+
+- **Predictive Modeling:** Input metrics like average strikes per round, takedown defense rates, and submission attempts into a machine learning model to predict future outcomes.
+- **Comparative Analysis:** Compare different fighters’ performance over time, or break down performance by weight class.
+- **Advanced Analytics:** Combine with shiny to build an interactive dashboard for browsing fighters’ stats, or use tidymodels for creating predictive models.
+
+## Tips & Best Practices
+
+- **Be Specific with Fighter Names:** If a name is common, try full names or a well-known identifier to ensure correct matching.
+- **Check Data Quality:** Older fights, especially from Pride, may have less detailed stats. Always inspect your data for completeness.
+- **Keep Data Updated:** UFCStats.com updates after each event, so rerun get_ufc_data() periodically to have current data.
+- **Integration with Ecosystem:** Combine ufcscrapeR output with tools like dplyr for data wrangling, ggplot2 for visualization, and caret or tidymodels for modeling.
+
+## Getting Help and Contributing
+
+- **Issues & Feature Requests:** Report bugs or request features on the GitHub repository.
+- **Community:** MMA analytics communities, Slack channels, or forums are great places to discuss insights and approaches.
+- **Contributions:** Contributions are welcome—whether it's bug fixes, new features, or improved documentation. Please see CONTRIBUTING.md for guidelines.
+
+## Conclusion
+
+The ufcscrapeR package streamlines the process of obtaining UFC and Pride fight data, providing a wealth of information at your fingertips. Whether you’re a researcher, data scientist, or MMA enthusiast, this package can help you transform raw fight data into actionable insights.
+
+Start exploring the data and unlock the potential of MMA analytics with ufcscrapeR today!

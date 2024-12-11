@@ -1,0 +1,95 @@
+### Data Dictionary for `get_ufc_data()` Output
+
+Below is a data dictionary describing the columns returned by the `get_ufc_data()` function from the `ufcscrapeR` package. Note that some columns may vary depending on data availability for particular fights, and not all columns may appear if data is missing.
+
+#### Core Columns
+
+| Column         | Type    | Description                                                                                  |
+|----------------|---------|----------------------------------------------------------------------------------------------|
+| result         | String  | Result of the fight from the requested fighter's perspective (`win`, `loss`, `draw`).         |
+| fighter_name    | String  | Name of the fighter whose data was requested.                                                |
+| opponent_name   | String  | Name of the opposing fighter.                                                                |
+| kd_fighter      | Numeric | Knockdowns scored by the requested fighter.                                                  |
+| kd_opponent     | Numeric | Knockdowns scored by the opponent.                                                           |
+| str_fighter     | Numeric | Total significant strikes landed by the requested fighter (fight summary).                   |
+| str_opponent    | Numeric | Total significant strikes landed by the opponent (fight summary).                            |
+| td_fighter      | Numeric | Total takedowns landed by the requested fighter.                                              |
+| td_opponent     | Numeric | Total takedowns landed by the opponent.                                                      |
+| sub_fighter     | Numeric | Submission attempts by the requested fighter.                                                |
+| sub_opponent    | Numeric | Submission attempts by the opponent.                                                         |
+| event_name      | String  | Name of the event at which the fight took place.                                              |
+| event_date      | String  | Date of the event.                                                                           |
+| method_main     | String  | Main method of victory (e.g., `KO/TKO`, `SUB`, `U-DEC`) if available.                       |
+| method_detail   | String  | Detailed method (e.g., `Rear Naked Choke`, `Punches to Head`) if available.                  |
+| round           | Numeric | The round in which the fight ended (or total rounds if it went to decision).                 |
+| Time            | Numeric | The time in seconds at which the fight ended in that round, or 0 if full duration.           |
+| fight_link      | String  | URL to the specific fight page on ufcstats.com.                                              |
+| Event           | String  | Event title (possibly redundant with event_name).                                            |
+| TimeFormat      | String  | Format of the fight time (e.g., `5 Rnd (5-5-5-5-5)`).                                       |
+| Referee         | String  | Name of the referee who officiated the fight.                                                 |
+| Details         | String  | Additional details (judges' scores, method notes) if available.                              |
+
+#### Total (Full-Fight) Statistics Columns
+
+These columns start with `TOT_` and represent overall totals for the entire fight.
+
+| Column                 | Type    | Description                                                              |
+|------------------------|---------|--------------------------------------------------------------------------|
+| TOT_fighter_KD         | Numeric | Total knockdowns by the requested fighter over the full fight.           |
+| TOT_opponent_KD        | Numeric | Total knockdowns by the opponent over the full fight.                    |
+| TOT_fighter_SigStr     | Numeric | Total significant strikes landed by the requested fighter.               |
+| TOT_opponent_SigStr    | Numeric | Total significant strikes landed by the opponent.                        |
+| TOT_fighter_SigStr_pct | Numeric | Overall significant strike accuracy (%) for the requested fighter.       |
+| TOT_opponent_SigStr_pct| Numeric | Overall significant strike accuracy (%) for the opponent.                |
+| TOT_fighter_TotalStr   | Numeric | Total strikes (all strikes) landed by the requested fighter.             |
+| TOT_opponent_TotalStr  | Numeric | Total strikes landed by the opponent.                                    |
+| TOT_fighter_Td         | Numeric | Total takedowns landed by the requested fighter.                         |
+| TOT_opponent_Td        | Numeric | Total takedowns landed by the opponent.                                  |
+| TOT_fighter_Td_pct     | Numeric | Overall takedown accuracy (%) for the requested fighter.                 |
+| TOT_opponent_Td_pct    | Numeric | Overall takedown accuracy (%) for the opponent.                          |
+| TOT_fighter_SubAtt     | Numeric | Total submission attempts by the requested fighter.                      |
+| TOT_opponent_SubAtt    | Numeric | Total submission attempts by the opponent.                               |
+| TOT_fighter_Rev        | Numeric | Total reversals by the requested fighter.                                |
+| TOT_opponent_Rev       | Numeric | Total reversals by the opponent.                                         |
+| TOT_fighter_Ctrl       | Numeric | Total control time (seconds) by the requested fighter.                   |
+| TOT_opponent_Ctrl      | Numeric | Total control time (seconds) by the opponent.                            |
+
+#### Round-by-Round Totals
+
+For each round `X`, similar columns appear with the prefix `RoundX_`. Not all fights have the same number of completed rounds, so rounds that didn’t occur may be `NA`.
+
+| Column                           | Type    | Description                                                        |
+|----------------------------------|---------|--------------------------------------------------------------------|
+| RoundX_fighter_KD                | Numeric | Knockdowns by the requested fighter in round X.                    |
+| RoundX_opponent_KD               | Numeric | Knockdowns by the opponent in round X.                             |
+| RoundX_fighter_SigStr            | Numeric | Significant strikes landed by the requested fighter in round X.    |
+| RoundX_opponent_SigStr           | Numeric | Significant strikes landed by the opponent in round X.             |
+| RoundX_fighter_SigStr_pct        | Numeric | Significant strike accuracy (%) for the requested fighter in X.    |
+| RoundX_opponent_SigStr_pct       | Numeric | Significant strike accuracy (%) for the opponent in X.             |
+| RoundX_fighter_TotalStr          | Numeric | Total strikes landed by the requested fighter in round X.          |
+| RoundX_opponent_TotalStr         | Numeric | Total strikes landed by the opponent in round X.                   |
+| RoundX_fighter_Td_pct            | Numeric | Takedown accuracy (%) for the requested fighter in round X.         |
+| RoundX_opponent_Td_pct           | Numeric | Takedown accuracy (%) for the opponent in round X.                  |
+| RoundX_fighter_SubAtt            | Numeric | Submission attempts by the requested fighter in round X.           |
+| RoundX_opponent_SubAtt           | Numeric | Submission attempts by the opponent in round X.                    |
+| RoundX_fighter_Rev               | Numeric | Reversals by the requested fighter in round X.                     |
+| RoundX_opponent_Rev              | Numeric | Reversals by the opponent in round X.                              |
+| RoundX_fighter_Ctrl              | Numeric | Control time (seconds) by the requested fighter in round X.        |
+| RoundX_opponent_Ctrl             | Numeric | Control time (seconds) by the opponent in round X.                 |
+
+#### Round-by-Round Significant Strikes by Target/Position
+
+Additional columns for significant strikes may appear, breaking down strikes by `HEAD`, `BODY`, `LEG`, `DISTANCE`, `CLINCH`, `GROUND`. These may also have `_landed`, `_attempted`, `_percentage` suffixes if "X of Y" splits were processed.
+
+| Example Column                  | Description                                               |
+|---------------------------------|-----------------------------------------------------------|
+| RoundX_fighter_HEAD             | Fighter's head strikes landed in round X.                |
+| RoundX_opponent_HEAD            | Opponent's head strikes landed in round X.               |
+| RoundX_fighter_HEAD_landed      | Head strikes landed by the fighter (parsed) in round X.  |
+| RoundX_fighter_HEAD_attempted   | Head strikes attempted by the fighter in round X.        |
+| RoundX_fighter_HEAD_percentage  | Head strike accuracy (%) for the fighter in round X.     |
+| ... similarly for BODY, LEG, DISTANCE, CLINCH, GROUND columns ... |
+
+**Note:** Some columns may contain `NA` if data is unavailable. Percentages are typically numeric and may be rounded. The exact set of columns for a given fighter depends on the completeness of their fight data on UFCStats.
+
+This dictionary provides a reference for understanding and using the dataset returned by the `get_ufc_data()` function.

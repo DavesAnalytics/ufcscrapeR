@@ -1,0 +1,27 @@
+Package: ufcscrapeR
+Title: Scrape UFC and Pride Fight Data from UFCStats.com
+Version: 0.1.0
+Authors@R: 
+    person("Dave", "Yount", email = "dave@sportanalytics.com", role = c("aut", "cre"))
+Description: The `ufcscrapeR` package provides tools for scraping comprehensive
+    UFC and Pride fight data directly from UFCStats.com. It extracts round-by-round metrics,
+    total fight statistics, and detailed performance indicators (such as strikes, takedowns,
+    and control time) for both fighters. The returned data is clean and structured,
+    making it ideal for predictive modeling, data visualization, and advanced MMA analytics.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    dplyr,
+    httr,
+    purrr,
+    rvest,
+    stringr,
+    xml2
+Suggests:
+    knitr,
+    rmarkdown,
+    spelling,
+    ggplot2
+VignetteBuilder: knitr
